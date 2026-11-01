@@ -1,245 +1,137 @@
-# CodeNomad
+# CodeNomad for Mac
 
-## The AI Coding Cockpit for OpenCode
+**An OpenCode workspace for macOS, with focused UI performance improvements.**
 
-CodeNomad is a **desktop and browser workspace for OpenCode V2** — built for developers who work across projects, long conversations, and Git worktrees. It connects to OpenCode's shared background service, keeping your sessions accessible from CodeNomad and compatible terminal clients.
+Manage AI coding sessions, projects, Git worktrees and code reviews from one desktop app. This community fork of [CodeNomad by Neural Nomads](https://github.com/NeuralNomadsAI/CodeNomad) focuses on responsiveness on Mac, starting with long-message rendering.
 
-> OpenCode gives you the engine. CodeNomad gives you the cockpit.
+**[Download for Apple Silicon](https://github.com/lolipokzz/CodeNomad-for-Mac/releases/download/v1.0.1/CodeNomad-Electron-macos-arm64-1.0.1.zip)** · [Releases](https://github.com/lolipokzz/CodeNomad-for-Mac/releases) · [Report an issue](https://github.com/lolipokzz/CodeNomad-for-Mac/issues)
 
-![CodeNomad 0.20 workspace with project tabs, nested sessions, a conversation timeline, and the Status panel](docs/screenshots/workspace-0.20.png)
+![CodeNomad workspace with project tabs, nested sessions, a conversation timeline and the Status panel](docs/screenshots/workspace-0.20.png)
 
-*The 0.20 interface, rendered with demonstration data. [Download the latest stable release](https://neuralnomadsai.github.io/CodeNomad/en/download.html).*
+*Upstream CodeNomad interface shown with demonstration data.*
 
-▶️ [Watch the 90-second tour of CodeNomad 1.0](https://youtu.be/IGuOApJ6-Kc)
+## Download and install
 
-[User help](https://neuralnomadsai.github.io/CodeNomad/) · [Read the English guide on GitHub](docs/help/en/index.md) — multilingual help for current CodeNomad and OpenCode V2.
+| Item | Current release |
+| --- | --- |
+| Version | v1.0.1 |
+| Desktop shell | Electron |
+| Processor | Apple Silicon — M-series, arm64 |
+| Operating system | macOS 13.5 or newer |
+| Download | ZIP archive, approximately 189 MB |
+| Signing | Locally built, unsigned and unnotarized |
 
----
+1. Download the **[application ZIP](https://github.com/lolipokzz/CodeNomad-for-Mac/releases/download/v1.0.1/CodeNomad-Electron-macos-arm64-1.0.1.zip)** from the release's **Assets** section. GitHub's **Source code** archives are for development.
+2. Unzip it. For a first comparison, keep the app in a separate folder and quit any running CodeNomad with **⌘Q**.
+3. Open `CodeNomad.app`. You can move it to **Applications** after testing.
+4. Select an existing OpenCode executable or install a compatible version through the setup screen.
+5. Open a project folder, connect your model provider and start a session.
 
-## Features
+The desktop bundle includes Node.js and npm. Git must be installed and available to the backend for repository and worktree features. The current OpenCode requirement is **2.2.3 or later**, with **2.2.5** as the recommended qualification target; see [runtime requirements](packages/server/src/opencode/runtime-support.ts).
 
-- **🚀 Projects and desktop windows** — Keep multiple projects open, with per-window tabs, drafts, attachments, and view restoration.
-- **🧠 Sessions and full-history navigation** — Browse nested sessions, fork conversations, search beyond loaded messages, and jump through long histories with a timeline and previews.
-- **🌳 Git worktrees** — Create and select worktrees, move a session with its subsessions, and review Git changes without leaving the workspace.
-- **💬 Rich conversations** — Markdown, code, diffs, tool-result images, configurable reasoning/tool visibility, and `/btw` for a temporary side question.
-- **📎 Files and attachments** — Pick, paste, or drop device files; use `@` references for project files and browse your workspace from the file panel.
-- **🌐 Remote access** — Connect to a CodeNomad server from a desktop client or browser, with password authentication and HTTPS support. Or turn on **Remote Control** to pair a phone or another computer from anywhere through an [OpenTunnel](https://github.com/anomalyco/opentunnel) relay, without opening ports: TLS ends on your machine.
-- **🧩 Tools and previews** — Monitor native background shells, manage MCP connections and Global/Project plugin activation, and open web tools as SideCars.
-- **🔎 Agent-driven browser previews** — Let your agent open and inspect a visible web preview in Electron or Windows Tauri.
-- **🎙️ Voice input and speech** — Dictate prompts and listen to responses.
-- **⌨️ A workspace you can adapt** — Command palette, notifications, customizable panels, independent light/dark palettes, and multiple interface languages.
+For Intel Macs and other desktop platforms, see the [upstream releases](https://github.com/NeuralNomadsAI/CodeNomad/releases). This fork's ready-to-download build targets Apple Silicon.
 
----
+### macOS launch checks
 
-## Getting Started
+macOS may ask you to approve this unsigned app. After verifying the download's origin, use **System Settings → Privacy & Security → Open Anyway** if offered. On a managed work Mac, follow your organization's application policy.
 
-### 🖥️ Desktop App
-
-Available as both Electron and Tauri builds — choose based on your preference.
-
-Download the archive or package for your platform from the [download page](https://neuralnomadsai.github.io/CodeNomad/en/download.html) or [Releases](https://github.com/NeuralNomadsAI/CodeNomad/releases/latest).
-
-| Platform | Electron | Tauri |
-|----------|----------|-------|
-| macOS | ZIP, separate Intel and Apple Silicon builds | ZIP, separate Intel and Apple Silicon builds |
-| Windows | ZIP (x64) | Installer (x64) |
-| Linux | deb (x64) | AppImage (x64) |
-
-The Linux builds are currently built and tested on Ubuntu 24.04. Compatibility with older distributions is not yet guaranteed. The Electron deb sets up Chromium's sandbox during installation and replaces a previously installed Tauri deb. The Tauri installer, macOS app and AppImage update themselves from within the app.
-
-On Linux, from the download folder:
+You can verify the downloaded ZIP in Terminal:
 
 ```bash
-# Electron deb
-sudo apt install ./CodeNomad-Electron-linux-x64-<version>.deb
-
-# Tauri AppImage
-chmod +x CodeNomad-Tauri-linux-x64-<version>.AppImage
-./CodeNomad-Tauri-linux-x64-<version>.AppImage
+shasum -a 256 ~/Downloads/CodeNomad-Electron-macos-arm64-1.0.1.zip
 ```
 
-Without FUSE (for example in a container), start the AppImage with `--appimage-extract-and-run`.
+Expected SHA-256:
 
-Desktop builds bundle Node.js and npm; **you do not need to install Node.js separately**. On first launch, select an existing compatible OpenCode executable or install OpenCode through the setup screen. You can manage the executable, updates, and service later in **Preferences → OpenCode**.
-
-Open a project folder, connect your model provider, and start a session. Git must be available to the CodeNomad backend for repository and worktree features; see [Requirements](#requirements).
-
-### 💻 CodeNomad Server
-
-Run on your development machine and access it through a browser. Install Node.js/npm and OpenCode V2 on that host first; Node.js 24 LTS is the recommended runtime (see [Requirements](#requirements)).
-
-```bash
-npx @neuralnomads/codenomad --password "your-password" --launch
+```text
+c6cb5a55091ff3868fc40af090171eca005e521fb0946a4096c12f9c6b747cdc
 ```
 
-The server binds to `127.0.0.1` by default. For remote access, add `--host 0.0.0.0` and connect to the printed HTTPS address; see [Server Documentation](packages/server/README.md#remote-access-binding-rules) for binding and TLS configuration.
+## What this fork improves
 
-> **Authentication:** Supply `--password` or `CODENOMAD_SERVER_PASSWORD` on each start, or use the UI's persistent password setup. `auth.json` is managed by CodeNomad; see [Authentication](packages/server/README.md#authentication).
+The current changes target time spent processing message text on the UI thread:
 
-> **Self-signed certificate:** On first launch with HTTPS enabled (the default), your browser will show a "Your connection is not private" warning. This is expected — the server generates a local self-signed certificate automatically. Click **Advanced → Proceed to localhost** to continue. For local-only use without the warning, run with `--https=false --http=true`.
+- **Reuse unchanged visible text.** When a long response continues streaming beyond its displayed prefix, the Markdown cache reuses the prefix's HTML. Edits within the visible text, reveals and highlighting changes select the appropriate render.
+- **Skip unnecessary formula scanning.** Ordinary paragraphs without paired display-math delimiters bypass the parser's character-by-character formula checks.
+- **Keep performance work reproducible.** A parser benchmark and browser regression coverage are included alongside the changes.
 
-See [Server Documentation](packages/server/README.md) for flags, TLS, auth, and remote access.
+These optimizations apply to the shared UI used by the desktop app. Overall responsiveness also depends on conversation content, available memory, the desktop shell and background work. Agent execution and model generation run through OpenCode and the selected provider.
 
-### 🧪 Dev Releases
+### Compare on your Mac
 
-Bleeding-edge builds from the `dev` branch:
+Run each build separately with the same project and conversation. Compare typing, scrolling, switching sessions and responsiveness while a long reply streams. Record your Mac chip, RAM, macOS version and application version when reporting a result.
+
+From a source checkout with dependencies installed, run the parser benchmark:
 
 ```bash
-npx @neuralnomads/codenomad-dev --password "your-password" --launch
+node --import tsx scripts/benchmark-markdown.mts
 ```
 
----
+It reports the median and p95 parser time for a synthetic text sample. Compare runs on the same idle machine and Node version. UI layout and end-to-end application latency require separate profiling.
 
-## OpenCode V2 and upgrading from 0.19.x
+## Workspace features
 
-CodeNomad **1.0.0 requires OpenCode V2**: **2.2.3 minimum, 2.2.5 recommended**; the minimum provides the image generation tool used by the Images settings and the Design extension. OpenCode V1 and the former V2 beta protocol are not supported. The current requirements are maintained in [`runtime-support.ts`](packages/server/src/opencode/runtime-support.ts).
+CodeNomad for Mac retains the upstream workspace features:
 
-- **One shared OpenCode service** owns sessions and messages. Closing a CodeNomad tab, window, or backend leaves that service running. Desktop tabs, drafts, and layout are restored separately for each window.
-- **Use an existing CLI or install from CodeNomad.** Executables on `PATH` are preferred; the setup screen also supports a selected executable and a shared user npm installation. The former private CodeNomad OpenCode installation is no longer used.
-- **Updating the CLI and restarting its service are separate actions.** Use the explicit service controls in Preferences when you want the running daemon to use an updated executable.
-- **Remote users should upgrade their CodeNomad server too.** The 0.20 UI requires CodeNomad server 0.20.0 or later.
+- Multiple projects, tabs and restored window layouts.
+- Nested agent sessions, conversation forks and full-history search.
+- Git worktrees and change review.
+- Markdown, code, diffs, attachments and tool-result images.
+- MCP connections, plugins, background shells and web previews.
+- Voice input, speech output and configurable interface languages.
+- Browser and remote access through the CodeNomad backend.
 
-For a manual CLI installation, follow the [OpenCode V2 installation guide](https://opencode.ai/v2/docs/). The npm package is `@opencode/cli` and the command is `opencode`.
+OpenCode's shared background service owns sessions, messages and agent execution. Closing the desktop UI leaves that service running.
 
----
+[User guide](docs/help/en/index.md) · [Server documentation](packages/server/README.md) · [Browser previews](dev-docs/BROWSER_AUTOMATION.md)
 
-## SideCars
+The server documentation also describes upstream npm distributions. Use this repository's source or release asset to run the fork's changes.
 
-SideCars let you open web tools running on the CodeNomad server host inside CodeNomad as tabs. Start the service separately, then add it in **Preferences → SideCars**.
+## Build from source
 
-A SideCar runs inside CodeNomad with the same access as the application, so only add services you trust, and avoid ones that display content you do not control.
-
-Session web previews are also available from the conversation toolbar. Agent-driven native browser automation is supported in Electron and Windows Tauri; other Tauri platforms use an iframe preview. See [Browser Automation](dev-docs/BROWSER_AUTOMATION.md) for platform details.
-
-<details>
-<summary><strong>Configuration</strong></summary>
-
-- **Name**: Display name used in CodeNomad
-- **Port**: Numeric port of the service on the server host, at `127.0.0.1:<port>`
-- **Protocol**: Select HTTP or HTTPS to match the service
-- **Base path**: Derived from the name and displayed as `/sidecars/:id`
-- **Prefix mode**:
-  - **Preserve prefix** forwards the full `/sidecars/:id/...` path upstream
-  - **Strip prefix** removes `/sidecars/:id` before forwarding the request upstream
-
-</details>
-
-<details>
-<summary><strong>VSCode (OpenVSCode Server)</strong></summary>
-
-Run with Docker:
+Use the Node.js version pinned in [`.node-version`](.node-version), Git and a compatible OpenCode executable.
 
 ```bash
-docker run -it --init -p 127.0.0.1:8000:3000 -v "${HOME}:${HOME}:cached" -e HOME=${HOME} gitpod/openvscode-server --server-base-path /sidecars/vscode
-```
-
-Add SideCar as:
-
-- **Name**: `VSCode`
-- **Port**: `8000`
-- **Protocol**: `HTTP`
-- **Base path**: `/sidecars/vscode`
-- **Prefix mode**: `Preserve prefix`
-
-</details>
-
-<details>
-<summary><strong>Terminal (ttyd)</strong></summary>
-
-Run with:
-
-```bash
-ttyd --writable zsh
-```
-
-Add SideCar as:
-
-- **Name**: `Terminal`
-- **Port**: `7681`
-- **Protocol**: `HTTP`
-- **Base path**: `/sidecars/terminal`
-- **Prefix mode**: `Strip prefix`
-
-</details>
-
----
-
-## Requirements
-
-- **[OpenCode V2](https://opencode.ai/v2/docs/)** — 2.2.3 minimum and 2.2.5 recommended for CodeNomad 1.0.0. Install/select it through desktop setup or provide a compatible CLI on the server host.
-- **[Git](https://git-scm.com/downloads)** — a prerequisite for full functionality (repository identity, Git operations and worktrees). Git must be executable in the CodeNomad backend's `PATH`; it is not bundled with the desktop installers.
-- **Node.js and npm** — required for the standalone npm server and source builds, bundled with desktop releases. Use **Node.js 24 LTS**; development and release builds use the version in [`.node-version`](.node-version) (currently 24.20.0).
-
-On Windows, install [Git for Windows](https://gitforwindows.org/) with the option to use Git from the command line and third-party software. A per-user installation is sufficient and does not require administrator rights; install into a user-writable directory and make Git available in the user `PATH`. On macOS or Linux, follow the [platform installation instructions](https://git-scm.com/downloads). Fully quit and restart CodeNomad after installation so its backend inherits the updated `PATH`. For a remote server, install Git on the server host for the account running CodeNomad and restart that server process, not just the browser. A Git installation available only inside WSL does not satisfy the Windows backend's requirement.
-
-**Without Git, CodeNomad tolerates a degraded, directory-only mode.** You can open a folder and talk to your agent, including asking it to help install Git. The backend supplies the agent with Git availability and backend platform context before prompts and custom commands; there is no blocking Git installation screen. Git operations and worktree management require Git. Session access is restricted to the explicitly opened physical folder; open another checkout separately to access its conversations. The agent's shell and the CodeNomad backend can run on different hosts, so installation help must target the backend account and environment. Git availability is rechecked on subsequent sends and the agent context is removed once it is available.
-
----
-
-## Development
-
-CodeNomad is a monorepo built with:
-
-| Package | Description |
-|---------|-------------|
-| **[packages/server](packages/server/README.md)** | Core logic & CLI — workspaces, OpenCode proxy, API, auth, speech |
-| **[packages/ui](packages/ui/README.md)** | SolidJS frontend — reactive, fast, beautiful |
-| **[packages/electron-app](packages/electron-app/README.md)** | Desktop shell — process management, IPC, native dialogs |
-| **[packages/tauri-app](packages/tauri-app)** | Tauri desktop shell — native windows, integration, and packaging |
-
-### Quick Start
-
-```bash
-git clone --branch dev https://github.com/NeuralNomadsAI/CodeNomad.git
-cd CodeNomad
+git clone https://github.com/lolipokzz/CodeNomad-for-Mac.git
+cd CodeNomad-for-Mac
 npm ci --workspaces --include=optional
 npm run dev
 ```
 
-`npm run dev` starts the Electron development host. Use Node.js from [`.node-version`](.node-version), Git, and a compatible OpenCode V2 CLI. For Tauri, install the [platform build prerequisites](https://v2.tauri.app/start/prerequisites/) and run `npm run dev:tauri`. See [CONTRIBUTING.md](CONTRIBUTING.md) for the development and PR workflow.
-
----
-
-## Troubleshooting
-
-<details>
-<summary><strong>macOS: "CodeNomad.app is damaged and can't be opened"</strong></summary>
-
-Gatekeeper flag due to missing notarization. Clear the quarantine attribute:
+Create an Apple Silicon release build:
 
 ```bash
-xattr -dr com.apple.quarantine /Applications/CodeNomad.app
+npm run build:mac-arm64 --workspace @neuralnomads/codenomad-electron-app
 ```
 
-On Intel Macs, also check **System Settings → Privacy & Security** on first launch.
-</details>
+Build artifacts are written to `packages/electron-app/release/`.
 
-<details>
-<summary><strong>Linux (Wayland + NVIDIA): Tauri App closes immediately</strong></summary>
-
-WebKitGTK DMA-BUF/GBM issue. Run with:
+### Checks
 
 ```bash
-WEBKIT_DISABLE_DMABUF_RENDERER=1 ./CodeNomad-Tauri-linux-x64-<version>.AppImage
+npm run typecheck --workspace @codenomad/ui
+node --import tsx --test packages/ui/src/lib/markdown.test.ts
+npx playwright install chromium
+npm run test:browser --workspace @codenomad/ui
 ```
 
-This applies to the Tauri WebKitGTK build. Electron uses Chromium and can be used as an alternative on the same machine.
-</details>
+Some upstream browser tests use platform-specific keyboard shortcuts. On macOS, inspect failures involving Ctrl versus Command separately from rendering regressions.
 
----
+See [BUILD.md](BUILD.md), [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md) for the repository's development conventions.
 
-## Community
+## Report a performance problem
 
-[![GitHub stars](https://img.shields.io/github/stars/NeuralNomadsAI/CodeNomad?style=flat-square&label=GitHub%20stars)](https://github.com/NeuralNomadsAI/CodeNomad/stargazers)
+[Open an issue](https://github.com/lolipokzz/CodeNomad-for-Mac/issues) with:
 
-<a href="https://www.star-history.com/?repos=NeuralNomadsAI%2FCodeNomad&amp;type=date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=NeuralNomadsAI/CodeNomad&amp;type=date&amp;theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=NeuralNomadsAI/CodeNomad&amp;type=date" />
-    <img alt="CodeNomad star history" src="https://api.star-history.com/chart?repos=NeuralNomadsAI/CodeNomad&amp;type=date" />
-  </picture>
-</a>
+- Mac model/chip, RAM and macOS version.
+- CodeNomad and OpenCode versions.
+- The action that stalls and whether a new empty conversation also stalls.
+- Approximate conversation size and whether the agent is streaming.
+- CPU usage and memory pressure in Activity Monitor during the slowdown.
+- A short recording or reproduction steps, with private project content removed.
 
----
+## Credits and license
 
-**Built with ♥ by [Neural Nomads](https://github.com/NeuralNomadsAI)** · [MIT License](LICENSE) · [Privacy policy](PRIVACY.md) · [Code signing policy](CODE_SIGNING.md)
+CodeNomad is created and maintained upstream by **[Neural Nomads and contributors](https://github.com/NeuralNomadsAI/CodeNomad)**. This community fork is maintained at **[lolipokzz/CodeNomad-for-Mac](https://github.com/lolipokzz/CodeNomad-for-Mac)**.
+
+Released under the [MIT License](LICENSE). See [third-party notices](THIRD_PARTY_NOTICES.md) for included components.
