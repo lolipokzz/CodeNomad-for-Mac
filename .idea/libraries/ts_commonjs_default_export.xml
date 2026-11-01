@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="ts-commonjs-default-export">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/packages/electron-app/release/mac-arm64/CodeNomad.app/Contents/Resources/server/node_modules/thread-stream/test/ts-commonjs-default-export.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

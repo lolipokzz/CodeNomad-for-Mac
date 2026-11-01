@@ -191,7 +191,8 @@ test("latest bounded render reveals the rest in place, keeping the rendered pref
   await page.evaluate(() => (window as any).fixture.releaseResult())
   await page.waitForFunction(() => document.querySelector(".markdown-body")?.textContent?.includes("END-SOURCE"))
   assert.equal((await calls(page)).at(-1).text, source)
-  assert.equal(await page.evaluate(() => document.activeElement?.classList.contains("markdown-body")), true, "focus moves to the revealed text")
+  // Reveal focus lands in requestAnimationFrame, after asynchronous HTML delivery.
+  await page.waitForFunction(() => document.activeElement?.classList.contains("markdown-body"))
   const cached = await page.evaluate(() => (window as any).fixture.cached())
   assert.equal(cached?.html, await page.locator(".markdown-body").innerHTML())
   assert.equal(cached?.text, undefined, "cache entries hold no slice of the source text")
@@ -283,3 +284,26 @@ for (const kind of ["prose", "code"] as const) {
     assert.ok((await page.locator(".markdown-body").textContent())?.includes("FINAL-CHUNK"), "the final highlighted content is displayed")
   }))
 }
+
+
+test("hidden streaming tails reuse the visible prefix while edits and reveals stay current", async () => open(async page => {
+  const base = streamingProse(60_000)
+  await startStream(page, base)
+  const before = await calls(page)
+  const prefix = before.at(-1).text
+  const result = await streamChunks(page, base)
+  console.log("markdown-hidden-tail", { baseline, renders: result.renders, taskMs: Math.round(result.taskMs) })
+  assert.equal(result.lastRendered, prefix)
+  if (!baseline) assert.equal(result.renders, 0, "hidden deltas must never reparse an unchanged visible prefix")
+
+  // A correction within the prefix must invalidate it even at the same length.
+  const edited = result.final.replace("Paragraph 0", "Paragraph X")
+  await page.evaluate(text => (window as any).fixture.update(text, 3000), edited)
+  await page.waitForFunction(() => document.querySelector(".markdown-body")?.textContent?.includes("Paragraph X"))
+  await page.locator(".message-hidden-text").getByRole("button", { name: "Show all", exact: true }).click()
+  await page.waitForFunction(() => document.querySelector(".markdown-body")?.textContent?.includes("CHUNK09"))
+  assert.equal((await calls(page)).at(-1).text, edited, "reveal includes every hidden delta")
+  await page.evaluate(() => (window as any).fixture.setStreaming(false))
+  await page.waitForFunction(() => document.querySelector(".markdown-body")?.getAttribute("data-markdown-highlight") === "true")
+  assert.equal((await calls(page)).at(-1).text, edited)
+}))

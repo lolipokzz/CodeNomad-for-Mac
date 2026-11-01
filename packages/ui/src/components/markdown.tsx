@@ -259,9 +259,11 @@ export function Markdown(props: MarkdownProps) {
     const defaultCodeBlockWrap = props.defaultCodeBlockWrap ?? true
     const partId = typeof part.id === "string" && part.id.length > 0 ? part.id : undefined
     const cacheId = resolvePartCacheId(part, text)
-    // A part version describes its whole text; a bounded window is a distinct render.
+    // Hidden streaming deltas change the native version without changing the
+    // rendered prefix. Key bounded HTML by its displayed content so those deltas
+    // reuse it; edits inside the prefix and reveals still invalidate the entry.
     const version = window.hidden > 0
-      ? `${resolvePartVersion(part, text)}@${window.text.length}`
+      ? `window:${text.length}:${hashText(text)}`
       : resolvePartVersion(part, text)
     return {
       revealSteps: bounded.steps(),

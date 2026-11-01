@@ -29,6 +29,9 @@ const BRACKET_DISPLAY_MATH_RULE = /^\\\[([\s\S]+?)\\\]/
 
 // Find a complete line-start display delimiter while skipping inline code spans.
 function findBracketDisplayStart(src: string): number {
+  // Most paragraphs contain no display math. Avoid per-character regex work
+  // (also repeated by the language-discovery lexer) unless both delimiters exist.
+  if (!src.includes("\\[") || !src.includes("\\]")) return -1
   const codeRule = marked.Lexer.rules.inline.gfm.code
   let index = 0
 

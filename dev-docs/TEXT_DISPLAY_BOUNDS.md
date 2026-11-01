@@ -62,7 +62,9 @@ per character:
   (`FollowScrollHelpers.stopFollowing`), so the revealed text grows below the
   reader; scrolling back to the bottom follows again.
 - Markdown computes the window inside its own memo (a reveal re-renders in place)
-  and gives bounded windows a distinct cache version; caching only HTML matters
+  and keys bounded cache versions by the displayed text length and hash. Updates
+  confined to the hidden tail reuse that HTML; prefix edits, reveals and highlight
+  mode changes select their own render. Caching only HTML matters
   because a slice would retain the whole part after eviction while the cache
   accounts only for the slice.
 - Windows read sources through `slice` (`TextSource`; strings qualify). Text joined

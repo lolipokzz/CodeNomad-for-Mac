@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="CodeNomad-Electron-macos-arm64-1.0.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/packages/electron-app/release/CodeNomad-Electron-macos-arm64-1.0.1.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

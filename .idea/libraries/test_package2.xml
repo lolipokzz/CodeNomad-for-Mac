@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="test-package2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/node_modules/@neuralnomads/codenomad-electron-app/release/mac-arm64/CodeNomad.app/Contents/Resources/server/node_modules/thread-stream/test/dir with spaces/test-package.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
